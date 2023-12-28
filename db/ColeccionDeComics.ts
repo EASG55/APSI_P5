@@ -15,10 +15,8 @@ export type ColeccionDeComicsModelType = mongoose.Document & Omit<ColeccionDeCom
 
 ColeccionDeComicsSchema.path("comics").validate(async function (comics: mongoose.Types.ObjectId[]) {
   try {
-    // Check if all comics are valid ObjectIds
     if(!comics.every((comic) => mongoose.isValidObjectId(comic))) return false;
     
-    // Check if all comics exist in the database
     const comicsEncontrados = await ComicModel.find({_id: {$in: comics}});
     if (comicsEncontrados.length !== comics.length) return false;
     
@@ -31,7 +29,6 @@ ColeccionDeComicsSchema.path("comics").validate(async function (comics: mongoose
 ColeccionDeComicsSchema.post("findOneAndDelete", async function (doc: ColeccionDeComicsModelType) {
   try {
     await UsuarioModel.updateMany({coleccionDeComics: doc._id}, {$pull: {coleccionDeComics: doc._id}});
-    // que elimine el comic de comics
 
     await ComicModel.deleteMany({_id: {$in: doc.comics}});
     } catch (e) {
