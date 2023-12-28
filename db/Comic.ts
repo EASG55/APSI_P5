@@ -16,7 +16,6 @@ export type ComicModelType = mongoose.Document & Omit<Comic, "_id">;
 ComicSchema.post("findOneAndDelete", async function (doc: ComicModelType) {
   try{
     await ColeccionDeComicsModel.updateMany({comics: doc._id}, {$pull: {comics: doc._id}});
-    // que elimine el comic de comics
 
     await ComicModel.deleteMany({_id: {$in: doc.comics}});
   
