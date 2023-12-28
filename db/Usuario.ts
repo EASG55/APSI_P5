@@ -13,10 +13,8 @@ const UsuarioSchema = new Schema({
 
 UsuarioSchema.path("coleccionDeComics").validate(async function (coleccion: mongoose.Types.ObjectId[]) {
   try{
-    // Check if all coleccionDeComics are valid ObjectIds
     if(!coleccion.every((coleccion) => mongoose.isValidObjectId(coleccion))) return false;
     
-    // Check if all coleccionDeComics exist in the database
     const coleccionEncontrada = await ColeccionDeComicsModel.find({_id: {$in: coleccion}});
     if (coleccionEncontrada.length !== coleccion.length) return false;
     
